@@ -26,6 +26,10 @@
         messagingSenderId: "889420789256"
       };
       firebase.initializeApp(config);
+      //reference database and store it inside constant value - whenever we interact with DB we do it through this
+      const db = firebase.firestore();
+      //this prevents warnings or errors in the console - setting it to true lets us work with snapshots in firestore
+      db.settings({ timestampsInSnapshots: true });
     </script>
   </body>
 </html>
