@@ -47,7 +47,6 @@ form.addEventListener('submit', (e) => {
 })
 
 // real-time listener
-
 db.collection('cafes').orderBy('city').onSnapshot(snapshot => {
     let changes = snapshot.docChanges();
     changes.forEach(change => {
