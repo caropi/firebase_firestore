@@ -21,18 +21,18 @@ function renderCafe(doc) {
 
     // Deleting data
     cross.addEventListener('click', (e) => {
-        e.stopPropegation();
+        e.stopPropagation();
         let id = e.target.parentElement.getAttribute('data-id');
         db.collection('cafes').doc(id).delete();
     })
 }
 // getting data
 //reference collection and get all items inside of it - it's an asynchronous request and can't be stored in a variable
-db.collection('cafes').get().then((snapshot) => {
-    snapshot.docs.forEach(doc => {
-        renderCafe(doc);
-    })
-});
+// db.collection('cafes').orderBy('city').get().then((snapshot) => {
+//     snapshot.docs.forEach(doc => {
+//         renderCafe(doc);
+//     })
+// });
 
 // saving data
 form.addEventListener('submit', (e) => {
@@ -44,4 +44,19 @@ form.addEventListener('submit', (e) => {
     // make these empty values so that new inputs can be added
     form.name.value = '';
     form.city.value = '';
+})
+
+// real-time listener
+
+db.collection('cafes').orderBy('city').onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+        // change.doc.data is a 3 step routine that grabs the change, looks at the document and shows the data
+        if(change.type == 'added') {
+            renderCafe(change.doc);
+        } else if (change.type == 'removed') {
+            let li = cafeList.querySelector('[data-id=' + change.doc.id + ']');
+            cafeList.removeChild(li);
+        }
+    })
 })
